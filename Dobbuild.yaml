@@ -1,1 +1,67 @@
 
+version: '1.0'
+mode: remote
+identifier: AzureCrowRunner
+category: Production
+username: crowuser
+environment:
+  # === Crowstore-backed values ===
+  SOURCE_URL:   { value: crowstore://USERMANAGMENT_URL }
+  GIT_TOKEN:    { value: crowstore://gittoken }
+  
+  DOCKER_USERNAME:    { value: crowstore://CROWREGNAME }
+  DOCKER_PASSWORD:    { value: crowstore://CROWREGNAMEPASS }
+
+  IMAGE_NAME:    { value: crowstore://CROWUSERIMAGE }
+
+  # These must match the *names after* crowstore:// exactly (uppercased, no extra underscores, good).
+  CROWSTORE_TOKEN_USERMANAGMENT_URL:   { value: 1f3e1935450a72dda56eae6bde0cd5db }
+
+  CROWSTORE_TOKEN_GITTOKEN:    { value: ee63e33b6b98a72756d732e115a5d256 }
+ 
+  CROWSTORE_TOKEN_CROWREGNAME: { value: 59618baf11885921fbcb491b420b0856 }
+  CROWSTORE_TOKEN_CROWREGNAMEPASS: { value: 03ba3a029d583c5c73c4464a9f85cd1d }
+  
+  CROWSTORE_TOKEN_CROWUSERIMAGE: { value: 16478c9db4acb5f80232eced3c4cb3e3 }
+
+jobs:
+- name: CROW PROD  USERMANAGMENT BUILD
+  stages:
+  - name: Updating Azure Server
+    tasks:
+      shell:
+        enabled: true
+        shell: bash
+        steps:
+        - sudo apt-get update -y
+  # ======== Core: Checkout (invokes your Python helper under the hood new) ========
+  - name: Git Checkout one
+    tasks:
+      checkout:
+        enabled: true
+        private_repo: true
+        # --- required / important fields your function expects ---
+        clone_dir: /home/crowuser/usermanagment
+        source_url: env=SOURCE_URL
+        branches: 
+        - master
+        provider: github
+        username: Devops-Bot-Official
+        token: env=GIT_TOKEN
+  - name: Image Build Stage
+    tasks:
+      docker_build:
+        enabled: true
+        image_name: env=IMAGE_NAME
+        build_tag: V.0.0.1
+        dockerfile_path: /home/crowuser/usermanagment/user-manager/Dockerfile     
+
+  - name: docker push stage
+    tasks:
+      docker_push:
+        enabled: true
+        provider: azure
+        image_name: env=IMAGE_NAME
+        image_tag: V.0.0.1
+        username: env=DOCKER_USERNAME
+        password: env=DOCKER_PASSWORD
