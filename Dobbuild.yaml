@@ -34,7 +34,7 @@ jobs:
         shell: bash
         steps:
         - sudo apt-get update -y
-  # ======== Core: Checkout (invokes your Python helper under the hood new) ========
+  # ======== Core: Checkout (invokes your Python helper under the hood ) ========
   - name: Git Checkout one
     tasks:
       checkout:
