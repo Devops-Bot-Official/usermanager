@@ -1,5 +1,4 @@
 
-
 version: '1.0'
 mode: remote
 identifier: AzureCrowRunner
@@ -127,7 +126,7 @@ jobs:
         env:
           PYTHONPATH: "/home/crowuser/usermanagment/user-service"
         steps:
-          - "run python -c \"import pytest; print('✅ pytest ' + pytest.__version__ + ' ready')\"" 
+          - "run python -c 'import pytest; print(\"✅ pytest \" + pytest.__version__ + \" ready\")'" 
 
   - name: Final Environment Check
     tasks:
@@ -136,8 +135,8 @@ jobs:
         working_directory: "/home/crowuser/usermanagment/user-service"
         shell: bash
         steps:
-        - source .venv/bin/activate && python -c "import pytest, fastapi, sqlalchemy, pydantic; print('✅ All core dependencies available')"
-        - source .venv/bin/activate && python -c "import sys; print('Python:' + sys.version); import pytest; print('pytest:' + pytest.__version__)"
+        - source .venv/bin/activate && python -c 'import pytest, fastapi, sqlalchemy, pydantic; print("✅ All core dependencies available")'
+        - source .venv/bin/activate && python -c 'import sys; print("Python:" + sys.version); import pytest; print("pytest:" + pytest.__version__)'
 
   - name: Run Password Security Tests
     tasks:
@@ -175,6 +174,33 @@ jobs:
         steps:
         - export AZURE_POSTGRES_URL="sqlite:///:memory:" && export ENTRA_SERVICE_URL="https://test-entra.com" && export PYTHONPATH="/home/crowuser/usermanagment/user-service" && source .venv/bin/activate && python -m pytest tests/test_password_security.py tests/test_validation.py tests/test_models.py tests/test_utils.py -x --tb=short
 
+  - name: Run Edge Case Tests
+    tasks:
+      shell:
+        enabled: true
+        working_directory: "/home/crowuser/usermanagment/user-service"
+        shell: bash
+        steps:
+        - export AZURE_POSTGRES_URL="sqlite:///:memory:" && export ENTRA_SERVICE_URL="https://test-entra.com" && export PYTHONPATH="/home/crowuser/usermanagment/user-service" && source .venv/bin/activate && python -m pytest tests/test_edge_cases.py::TestEdgeCases::test_malformed_json_handling tests/test_edge_cases.py::TestEdgeCases::test_password_hashing_edge_cases tests/test_edge_cases.py::TestEdgeCases::test_missing_headers -v --tb=short
+
+  - name: Run Security Feature Tests  
+    tasks:
+      shell:
+        enabled: true
+        working_directory: "/home/crowuser/usermanagment/user-service"
+        shell: bash
+        steps:
+        - export AZURE_POSTGRES_URL="sqlite:///:memory:" && export ENTRA_SERVICE_URL="https://test-entra.com" && export PYTHONPATH="/home/crowuser/usermanagment/user-service" && source .venv/bin/activate && python -m pytest tests/test_security.py::TestSecurityFeatures::test_rate_limiting_applied tests/test_security.py::TestSecurityFeatures::test_middleware_configuration tests/test_security.py::TestSecurityFeatures::test_application_startup_event tests/test_security.py::TestSecurityFeatures::test_fastapi_app_configuration -v --tb=short
+
+  - name: Run Complete Test Suite
+    tasks:
+      shell:
+        enabled: true
+        working_directory: "/home/crowuser/usermanagment/user-service"
+        shell: bash
+        steps:
+        - export AZURE_POSTGRES_URL="sqlite:///:memory:" && export ENTRA_SERVICE_URL="https://test-entra.com" && export PYTHONPATH="/home/crowuser/usermanagment/user-service" && source .venv/bin/activate && python -m pytest tests/ --maxfail=3 --tb=short
+
   - name: Generate Test Report
     tasks:
       shell:
@@ -182,7 +208,7 @@ jobs:
         working_directory: "/home/crowuser/usermanagment/user-service"
         shell: bash
         steps:
-        - source .venv/bin/activate && python -c "print('✅ All critical user-service tests passed - Service ready for deployment')"
+        - source .venv/bin/activate && python -c 'print("✅ All critical user-service tests passed - Service ready for deployment")'
 
   - name: Generate Dependency Lockfile
     tasks:
