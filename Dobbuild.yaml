@@ -1,4 +1,3 @@
-
 version: '1.0'
 mode: remote
 identifier: AzureCrowRunner
@@ -135,8 +134,8 @@ jobs:
         working_directory: "/home/crowuser/usermanagment/user-service"
         shell: bash
         steps:
-        - source .venv/bin/activate && python -c 'import pytest, fastapi, sqlalchemy, pydantic; print("✅ All core dependencies available")'
-        - source .venv/bin/activate && python -c 'import sys; print("Python:" + sys.version); import pytest; print("pytest:" + pytest.__version__)'
+        - source .venv/bin/activate && python -c "import pytest, fastapi, sqlalchemy, pydantic; print('✅ All core dependencies available')"
+        - source .venv/bin/activate && python -c "import sys; print('Python:' + sys.version); import pytest; print('pytest:' + pytest.__version__)"
 
   - name: Run Password Security Tests
     tasks:
