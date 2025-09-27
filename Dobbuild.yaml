@@ -1,4 +1,5 @@
 
+
 version: '1.0'
 mode: remote
 identifier: AzureCrowRunner
@@ -100,18 +101,6 @@ jobs:
           - install
           - check
 
-  - name: Verify Test Environment
-    tasks:
-      pip:
-        enabled: true
-        working_directory: "/home/crowuser/usermanagment/user-service"
-        use_venv: true
-        venv_path: "/home/crowuser/usermanagment/user-service/.venv"
-        env:
-          PYTHONPATH: "/home/crowuser/usermanagment/user-service"
-        steps:
-          - "run python -c \"import pytest; print('✅ pytest ' + pytest.__version__ + ' ready')\"" 
-
   - name: Install Additional Test Dependencies
     tasks:
       pip:
@@ -127,6 +116,18 @@ jobs:
           - "fakeredis>=2.20.0"
         steps:
           - install
+
+  - name: Verify Test Environment
+    tasks:
+      pip:
+        enabled: true
+        working_directory: "/home/crowuser/usermanagment/user-service"
+        use_venv: true
+        venv_path: "/home/crowuser/usermanagment/user-service/.venv"
+        env:
+          PYTHONPATH: "/home/crowuser/usermanagment/user-service"
+        steps:
+          - "run python -c \"import pytest; print('✅ pytest ' + pytest.__version__ + ' ready')\"" 
 
   - name: Final Environment Check
     tasks:
