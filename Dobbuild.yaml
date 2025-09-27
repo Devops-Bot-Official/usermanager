@@ -110,7 +110,7 @@ jobs:
         env:
           PYTHONPATH: "/home/crowuser/usermanagment/user-service"
         steps:
-          - "run python -c \"import pytest; print(f'✅ pytest {pytest.__version__} ready')\"" 
+          - "run python -c \"import pytest; print(f'pytest {pytest.__version__} ready')\"" 
 
   - name: Install Additional Test Dependencies
     tasks:
