@@ -125,7 +125,7 @@ jobs:
         env:
           PYTHONPATH: "/home/crowuser/usermanagment/user-service"
         steps:
-          - "run python -c 'import pytest; print(\"✅ pytest \" + pytest.__version__ + \" ready\")'" 
+          - "run python -c 'import pytest; print(\" pytest \" + pytest.__version__ + \" ready\")'" 
 
   - name: Final Environment Check
     tasks:
@@ -134,8 +134,8 @@ jobs:
         working_directory: "/home/crowuser/usermanagment/user-service"
         shell: bash
         steps:
-        - source .venv/bin/activate && python -c "import pytest, fastapi, sqlalchemy, pydantic; print('✅ All core dependencies available')"
-        - source .venv/bin/activate && python -c "import sys; print('Python:' + sys.version); import pytest; print('pytest:' + pytest.__version__)"
+        - source .venv/bin/activate && python -c "import pytest, fastapi, sqlalchemy, pydantic; print('All core dependencies available')"
+        - source .venv/bin/activate && python -c "import sys, pytest; print('Python:' + sys.version + ' pytest:' + pytest.__version__)"
 
   - name: Run Password Security Tests
     tasks:
@@ -207,7 +207,7 @@ jobs:
         working_directory: "/home/crowuser/usermanagment/user-service"
         shell: bash
         steps:
-        - source .venv/bin/activate && python -c 'print("✅ All critical user-service tests passed - Service ready for deployment")'
+        - source .venv/bin/activate && python -c 'print(" All critical user-service tests passed - Service ready for deployment")'
 
   - name: Generate Dependency Lockfile
     tasks:
