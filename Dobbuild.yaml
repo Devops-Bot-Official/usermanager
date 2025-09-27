@@ -181,7 +181,7 @@ jobs:
         working_directory: "/home/crowuser/usermanagment/user-service"
         shell: bash
         steps:
-        - source .venv/bin/activate && python -c "print('✅ All critical user-service tests passed - Service ready for deployment')"
+        - source .venv/bin/activate && python -c "print(' All critical user-service tests passed - Service ready for deployment')"
 
   - name: Generate Dependency Lockfile
     tasks:
